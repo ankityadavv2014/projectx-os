@@ -3,9 +3,19 @@
 > **"In the Age of Machines, We Build Humans"**  
 > **"ProjectX — The Human Upgrade"**
 
+## 📌 Current Stage: Stage 0 — Cyberpunk OS Website
+
+> **Ideal State Reference:** See [NORTH-STAR.md](./NORTH-STAR.md) for the full global platform vision.  
+> **Development Backlog:** See [BACKLOG.md](./BACKLOG.md) for tracked work items.
+
+---
+
 ## 1. Vision
 
 ProjectX OS is not just a website—it's an **Experience OS**. A premium, futuristic, cyberpunk-themed digital experience that bridges the gap between a landing page and an operating system. Users don't just visit; they **enter, explore, and level up**.
+
+### Long-term Vision (12 Months)
+ProjectX becomes a **global Experience Operating System** that turns learning into real-world capability and earning—deployed in schools, homes, community centers, and corporate programs worldwide. See [NORTH-STAR.md](./NORTH-STAR.md) for full details.
 
 ## 2. Core Principles
 
