@@ -43,6 +43,9 @@ const logos = [
   { name: 'UNESCO', opacity: 0.3 },
 ];
 
+// Disclaimer: These are aspirational institutions we aim to partner with
+const INSTITUTION_DISCLAIMER = "Inspired by world-class standards. Partnerships in progress.";
+
 function AnimatedNumber({ value, suffix, inView }: { value: number; suffix: string; inView: boolean }) {
   const [count, setCount] = useState(0);
   
@@ -113,8 +116,11 @@ export function SocialProof() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <p className="text-white/40 text-sm font-mono uppercase tracking-widest mb-8">
-            Trusted by forward-thinking institutions
+          <p className="text-white/40 text-sm font-mono uppercase tracking-widest mb-4">
+            Aiming for world-class standards
+          </p>
+          <p className="text-white/30 text-xs mb-8 italic">
+            {INSTITUTION_DISCLAIMER}
           </p>
           
           {/* Logo parade */}
