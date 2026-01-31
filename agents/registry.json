@@ -1,0 +1,136 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-30T00:00:00Z",
+  "agents": [
+    {
+      "id": "pmo",
+      "name": "PMO / Orchestrator",
+      "role": "Project coordination, planning, conflict resolution",
+      "promptPath": "prompts/pmo.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "product-manager",
+      "name": "Product Manager",
+      "role": "Feature definition, prioritization, user advocacy",
+      "promptPath": "prompts/product-manager.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "creative-director",
+      "name": "Creative Director",
+      "role": "Brand, visual design, experience quality",
+      "promptPath": "prompts/creative-director.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "ux-architect",
+      "name": "UX Architect",
+      "role": "User flows, information architecture, usability",
+      "promptPath": "prompts/ux-architect.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "frontend-lead",
+      "name": "Frontend Lead",
+      "role": "UI implementation, component architecture, performance",
+      "promptPath": "prompts/frontend-lead.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "backend-lead",
+      "name": "Backend Lead",
+      "role": "API design, database, server architecture",
+      "promptPath": "prompts/backend-lead.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "ai-agent-engineer",
+      "name": "AI/Agent Engineer",
+      "role": "AI integrations, LLM orchestration, agent systems",
+      "promptPath": "prompts/ai-agent-engineer.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "security-engineer",
+      "name": "Security Engineer",
+      "role": "Security posture, compliance, data protection",
+      "promptPath": "prompts/security-engineer.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "qa-engineer",
+      "name": "QA Engineer",
+      "role": "Testing strategy, quality gates, bug prevention",
+      "promptPath": "prompts/qa-engineer.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    },
+    {
+      "id": "devops",
+      "name": "DevOps Engineer",
+      "role": "CI/CD, infrastructure, deployment",
+      "promptPath": "prompts/devops.md",
+      "status": "active",
+      "spawnedAt": "2026-01-30T00:00:00Z"
+    }
+  ],
+  "specialists": [
+    {
+      "id": "performance-tuner",
+      "name": "Performance Tuner",
+      "role": "Lighthouse optimization, bundle analysis, LCP/FID improvements",
+      "scope": ["lighthouse", "lcp", "bundle", "performance"],
+      "status": "pending",
+      "spawnTrigger": "After MVP loop complete"
+    },
+    {
+      "id": "animation-specialist",
+      "name": "Animation Specialist",
+      "role": "Framer Motion patterns, microinteractions, delight moments",
+      "scope": ["framer-motion", "microinteractions", "delight"],
+      "status": "pending",
+      "spawnTrigger": "After MVP loop complete"
+    },
+    {
+      "id": "a11y-specialist",
+      "name": "Accessibility Specialist",
+      "role": "WCAG compliance, keyboard navigation, screen reader testing",
+      "scope": ["keyboard", "contrast", "reduced-motion", "wcag"],
+      "status": "pending",
+      "spawnTrigger": "After MVP loop complete"
+    },
+    {
+      "id": "seo-specialist",
+      "name": "SEO Specialist",
+      "role": "Meta optimization, sitemap generation, Open Graph tags",
+      "scope": ["metadata", "sitemap", "og", "seo"],
+      "status": "pending",
+      "spawnTrigger": "After MVP loop complete"
+    },
+    {
+      "id": "telemetry-analyst",
+      "name": "Telemetry Analyst",
+      "role": "Event schema design, conversion tracking, analytics dashboards",
+      "scope": ["events", "conversion", "analytics"],
+      "status": "pending",
+      "spawnTrigger": "After MVP loop complete"
+    },
+    {
+      "id": "component-librarian",
+      "name": "Component Librarian",
+      "role": "Design system hygiene, documentation, Storybook maintenance",
+      "scope": ["design-system", "storybook", "documentation"],
+      "status": "pending",
+      "spawnTrigger": "After MVP loop complete"
+    }
+  ]
+}
