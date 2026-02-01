@@ -32,3 +32,7 @@ export {
   PhaseTimeline,
   PhaseCard,
 } from "./PhaseIndicator";
+
+export {
+  CommunityHub,
+} from "./CommunityHub";

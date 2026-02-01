@@ -359,27 +359,78 @@ Our goal is capability development for everyone. Contact us for specific pricing
 // =============================================================================
 
 interface AIAssistantProps {
-  context?: 'landing' | 'student' | 'mission' | 'default';
+  context?: 'landing' | 'student' | 'teacher' | 'mission' | 'default';
   minimized?: boolean;
   position?: 'bottom-right' | 'bottom-left';
+  missionContext?: {
+    missionId?: string;
+    missionTitle?: string;
+    subject?: string;
+    stage?: string;
+  };
+}
+
+// Transformation tools (Pilot: AI assists, human decides)
+const TRANSFORMATION_TOOLS = [
+  { id: 'explain', label: 'Explain', icon: '💡', prompt: 'Can you explain this concept in simpler terms?' },
+  { id: 'summarize', label: 'Summarize', icon: '📝', prompt: 'Can you summarize this information?' },
+  { id: 'notes', label: 'Make Notes', icon: '📋', prompt: 'Convert this into study notes format' },
+  { id: 'share', label: 'Share Format', icon: '🔗', prompt: 'Format this as shareable insights' },
+];
+
+// Pilot: Hard stops - things AI must refuse
+const HARD_STOP_PATTERNS = [
+  /complete.*assignment/i,
+  /do.*homework/i,
+  /write.*essay.*for me/i,
+  /solve.*problem.*for me/i,
+  /give.*answer/i,
+  /finish.*project/i,
+  /submit.*for me/i,
+];
+
+const HARD_STOP_RESPONSE = `I'm designed to **guide**, not complete work for you.
+
+**What I CAN do:**
+- Explain concepts in different ways
+- Break down complex problems
+- Suggest approaches
+- Review your thinking
+
+**What I WON'T do:**
+- Complete assignments for you
+- Generate final answers
+- Submit work on your behalf
+
+Learning happens when **you** do the work. How can I help you understand the problem better?`;
+
+function checkHardStop(query: string): boolean {
+  return HARD_STOP_PATTERNS.some(pattern => pattern.test(query));
 }
 
 export function AIAssistant({ 
   context = 'default',
   minimized: initialMinimized = true,
-  position = 'bottom-right'
+  position = 'bottom-right',
+  missionContext
 }: AIAssistantProps) {
   const [isOpen, setIsOpen] = useState(!initialMinimized);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [lastQuery, setLastQuery] = useState<string>('');
+  const [showTools, setShowTools] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   
   const quickActions = QUICK_ACTIONS[context] || QUICK_ACTIONS.default;
   const suggestedPrompts = lastQuery ? getSuggestedPrompts(lastQuery, context) : [];
   const router = useRouter();
+  
+  // Build context string for AI
+  const contextString = missionContext 
+    ? `[Mission: ${missionContext.missionTitle || 'Unknown'}, Subject: ${missionContext.subject || 'General'}, Stage: ${missionContext.stage || 'learning'}]`
+    : `[Context: ${context}]`;
   
   // Auto-scroll to bottom
   useEffect(() => {
@@ -431,6 +482,20 @@ export function AIAssistant({
     setLastQuery(text.trim()); // Track for suggested prompts
     
     try {
+      // Pilot: Check hard stops first
+      if (checkHardStop(text.trim())) {
+        const hardStopMessage: Message = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: HARD_STOP_RESPONSE,
+          timestamp: new Date(),
+          source: 'fallback',
+        };
+        setMessages(prev => [...prev, hardStopMessage]);
+        setIsTyping(false);
+        return;
+      }
+      
       // First, check if this is an actionable request
       const actionResult = detectAction(text.trim());
       
@@ -562,16 +627,59 @@ export function AIAssistant({
                 </div>
                 <div>
                   <h3 className="text-white font-semibold text-sm">ProjectX Guide</h3>
-                  <p className="text-white/50 text-xs">AI Assistant</p>
+                  <p className="text-white/50 text-xs">
+                    {missionContext?.missionTitle 
+                      ? `📚 ${missionContext.missionTitle}` 
+                      : context === 'student' ? '🎓 Student Mode' 
+                      : context === 'teacher' ? '👩‍🏫 Teacher Mode'
+                      : 'AI Assistant'}
+                  </p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Tools toggle - only show in mission/student context */}
+                {(context === 'student' || context === 'mission') && (
+                  <button
+                    onClick={() => setShowTools(!showTools)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white/60 hover:text-white transition-colors ${showTools ? 'bg-[var(--molten-orange)]/30 text-[var(--molten-orange)]' : 'bg-white/10 hover:bg-white/20'}`}
+                    title="Transformation Tools"
+                  >
+                    ⚡
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
+            
+            {/* Transformation Tools Bar */}
+            <AnimatePresence>
+              {showTools && (context === 'student' || context === 'mission') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="border-b border-white/10 overflow-hidden"
+                >
+                  <div className="p-2 flex gap-2">
+                    {TRANSFORMATION_TOOLS.map((tool) => (
+                      <button
+                        key={tool.id}
+                        onClick={() => sendMessage(tool.prompt)}
+                        className="flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs transition-all"
+                      >
+                        <span>{tool.icon}</span>
+                        <span className="hidden sm:inline">{tool.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
             
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px]">

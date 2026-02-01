@@ -583,4 +583,153 @@ interface ProgressChartProps {
 
 ---
 
+## 13. Figma Handoff Documentation
+
+> **Pilot Compliance**: Every component must document Purpose, State, and Interaction patterns for design-development alignment.
+
+### Component Documentation Template
+
+```markdown
+## [Component Name]
+
+### Purpose
+What problem does this component solve? What user need does it address?
+
+### States
+| State | Description | Visual Cues |
+|-------|-------------|-------------|
+| Default | Initial render state | Normal styling |
+| Hover | Mouse over | Scale/glow effect |
+| Focus | Keyboard focus | Orange ring |
+| Active | Being clicked | Slight scale down |
+| Loading | Async operation | Pulse animation |
+| Disabled | Not interactive | 50% opacity |
+| Error | Validation failed | Red border/text |
+| Success | Action completed | Green indicator |
+
+### Interactions
+- **Click/Tap**: What happens?
+- **Keyboard**: Which keys work?
+- **Touch**: Gestures supported?
+- **Drag**: Is it draggable?
+
+### Pilot Boundaries
+What this component DOES and DOES NOT do.
+```
+
+---
+
+### Key Component Handoffs
+
+#### MissionCard
+| Property | Figma Token | Code Value |
+|----------|-------------|------------|
+| Border Radius | `radius-xl` | `16px` |
+| Padding | `space-4` | `1rem` |
+| Background | `color-surface` | `white/5` |
+| Hover Scale | — | `1.02` |
+
+**Purpose**: Display mission summary with progress indicator.
+
+**States**:
+- `not-started`: Gray icon, "Start" button
+- `in-progress`: Yellow pulsing, "Continue" button
+- `submitted`: Blue waiting, "Pending" badge
+- `reviewed`: Purple notification, "View Feedback" button
+- `approved`: Green checkmark, XP earned display
+
+**Pilot Rule**: Never auto-complete missions. Human action required.
+
+---
+
+#### AIAssistant
+| Property | Figma Token | Code Value |
+|----------|-------------|------------|
+| Fab Size | `size-16` | `64px` |
+| Chat Width | — | `400px` |
+| Chat Height | — | `600px max` |
+
+**Purpose**: Floating AI guide for navigation and learning support.
+
+**States**:
+- Minimized: Pulsing orb button
+- Expanded: Chat panel with messages
+- Typing: Animated dots
+- Tools Open: Transformation bar visible
+
+**Pilot Rule**: AI guides, never completes. Hard stops on homework/answer requests.
+
+---
+
+#### CommunityHub
+| Property | Figma Token | Code Value |
+|----------|-------------|------------|
+| Card Gap | `space-3` | `0.75rem` |
+| Tab Active | `color-primary` | `molten-orange` |
+
+**Purpose**: Show cohort members and group missions.
+
+**States**:
+- Members Tab: List of peer cards
+- Missions Tab: Group mission cards
+
+**Pilot Rule**: No leaderboard rankings. Constructive feedback only.
+
+---
+
+#### StatCard
+| Property | Figma Token | Code Value |
+|----------|-------------|------------|
+| Icon Size | `size-5` | `20px` |
+| Value Size | `text-2xl` | `1.5rem` |
+
+**Purpose**: Display single metric with icon.
+
+**States**:
+- Default: Static value
+- Loading: Skeleton pulse
+- Trend: Arrow up/down indicator
+
+---
+
+#### BootFailure
+| Property | Figma Token | Code Value |
+|----------|-------------|------------|
+| Background | `color-error/10` | `red-500/10` |
+| Icon Color | `color-error` | `red-400` |
+
+**Purpose**: Error state when OS boot validation fails.
+
+**States**:
+- No Session: Redirect to login
+- Invalid Persona: Show persona mismatch
+- Incomplete Boot: Show missing requirements
+
+---
+
+### Design-to-Code Mapping
+
+| Figma Layer | React Component | Props |
+|-------------|-----------------|-------|
+| MissionCard/Default | `MissionCard` | `mission`, `progress` |
+| MissionCard/InProgress | `MissionCard` | `state="in-progress"` |
+| StatCard/XP | `StatCard` | `icon={Zap}`, `label="XP"` |
+| Avatar/User | `Avatar` | `src`, `name`, `size` |
+| Badge/Skill | `BadgeDisplay` | `badge`, `size` |
+
+### Animation Tokens
+
+| Animation | Duration | Easing | Trigger |
+|-----------|----------|--------|---------|
+| Card Hover | `150ms` | `ease-out` | Mouse enter |
+| Modal Open | `200ms` | `spring` | Click |
+| Message In | `300ms` | `ease-out` | New message |
+| Tools Bar | `200ms` | `ease-in-out` | Toggle |
+
+---
+
+*Figma handoff ensures pixel-perfect implementation. Designers and developers reference this document for consistency.*
+
+---
+
 *This component library is the foundation of ProjectX OS UI. Maintain consistency across all features.*

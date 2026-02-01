@@ -781,3 +781,152 @@ export function getXPProgress(xp: number): { current: number; required: number; 
     percentage: Math.min((currentLevelXP / required) * 100, 100),
   };
 }
+
+// =============================================================================
+// MULTI-REGION & MULTI-TENANT (Pilot: Scale Ready)
+// =============================================================================
+
+/**
+ * Supported deployment regions
+ * Each region has isolated data and complies with local data residency laws
+ */
+export type Region = 'us-east' | 'us-west' | 'eu-west' | 'ap-south' | 'ap-east';
+
+/**
+ * Tenant represents an isolated organization deployment
+ * All data is scoped to tenant for multi-tenancy
+ */
+export interface Tenant {
+  id: string;
+  name: string;
+  slug: string;
+  region: Region;
+  
+  // Organization this tenant belongs to
+  orgId: string;
+  
+  // Tenant-level settings
+  settings: {
+    dataResidency: Region;
+    backupRegion?: Region;
+    customDomain?: string;
+    ssoEnabled: boolean;
+    ssoProvider?: 'google' | 'microsoft' | 'okta' | 'custom';
+  };
+  
+  // Compliance
+  compliance: {
+    gdprCompliant: boolean;
+    coppaCompliant: boolean;
+    ferpaCompliant: boolean;
+  };
+  
+  status: 'provisioning' | 'active' | 'suspended' | 'migrating';
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Regional data routing configuration
+ */
+export interface RegionConfig {
+  region: Region;
+  endpoint: string;
+  isPrimary: boolean;
+  isActive: boolean;
+  latencyMs?: number;
+}
+
+/**
+ * RBAC: Permission scopes for role-based access (simplified for multi-tenant)
+ */
+export type PermissionScope = 
+  | 'read:own'      // Read own data only
+  | 'read:cohort'   // Read cohort-level data
+  | 'read:org'      // Read organization-level data
+  | 'write:own'     // Write own data
+  | 'write:cohort'  // Write cohort-level data (teachers)
+  | 'write:org'     // Write organization-level data (admins)
+  | 'manage:users'  // User management
+  | 'manage:cohorts'// Cohort management
+  | 'manage:org'    // Organization management
+  | 'manage:billing'// Billing management
+  | 'admin:super';  // Super admin (ProjectX staff only)
+
+/**
+ * RBAC: Simplified scope permissions per role (for multi-tenant checks)
+ */
+export const SCOPE_PERMISSIONS: Record<UserRole, PermissionScope[]> = {
+  student: ['read:own', 'write:own'],
+  parent: ['read:own'], // Read child's data via linking
+  teacher: ['read:own', 'write:own', 'read:cohort', 'write:cohort'],
+  facilitator: ['read:own', 'write:own', 'read:cohort', 'write:cohort'],
+  admin: ['read:own', 'write:own', 'read:org', 'write:org', 'manage:users', 'manage:cohorts', 'manage:org'],
+};
+
+/**
+ * Check if a role has a specific scope permission
+ */
+export function hasScopePermission(role: UserRole, permission: PermissionScope): boolean {
+  const permissions = SCOPE_PERMISSIONS[role] || [];
+  return permissions.includes(permission);
+}
+
+/**
+ * Check if user can access a resource based on ownership and scope
+ */
+export function canAccessResource(
+  userRole: UserRole,
+  userId: string,
+  resourceOwnerId: string,
+  resourceCohortId?: string,
+  userCohortIds?: string[]
+): boolean {
+  // Own resources always accessible
+  if (userId === resourceOwnerId) return true;
+  
+  // Check cohort-level access for teachers
+  if (hasScopePermission(userRole, 'read:cohort') && resourceCohortId) {
+    return userCohortIds?.includes(resourceCohortId) ?? false;
+  }
+  
+  // Org-level access for admins
+  if (hasScopePermission(userRole, 'read:org')) return true;
+  
+  return false;
+}
+
+/**
+ * Tenant context for request scoping
+ */
+export interface TenantContext {
+  tenantId: string;
+  region: Region;
+  orgId: string;
+  userId: string;
+  userRole: UserRole;
+  cohortIds: string[];
+}
+
+/**
+ * Extract tenant context from session (for middleware)
+ */
+export function extractTenantContext(session: {
+  userId: string;
+  orgId: string;
+  role: UserRole;
+  cohortIds?: string[];
+  tenantId?: string;
+  region?: Region;
+}): TenantContext | null {
+  if (!session.userId || !session.orgId) return null;
+  
+  return {
+    tenantId: session.tenantId || session.orgId, // Default to orgId if no tenant
+    region: session.region || 'us-east', // Default region
+    orgId: session.orgId,
+    userId: session.userId,
+    userRole: session.role,
+    cohortIds: session.cohortIds || [],
+  };
+}
