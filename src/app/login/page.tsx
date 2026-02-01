@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { login, loginAsRole, getDashboardForRole } from '@/lib/auth';
 import type { GoLiveRole } from '@/types/go-live';
+import { GraduationCap, UserCheck, Building2, Zap } from 'lucide-react';
 
 /**
  * Login Page
@@ -27,6 +28,7 @@ export default function LoginPage() {
     try {
       const result = await login(email);
       if (result.success && result.session) {
+        // Redirect to role-specific dashboard
         router.push(getDashboardForRole(result.session.role));
       } else {
         setError(result.error || 'Login failed');
@@ -45,6 +47,7 @@ export default function LoginPage() {
     try {
       const result = await loginAsRole(role);
       if (result.success && result.session) {
+        // Redirect to role-specific dashboard
         router.push(getDashboardForRole(result.session.role));
       } else {
         setError(result.error || 'Login failed');
@@ -56,11 +59,11 @@ export default function LoginPage() {
     }
   };
 
-  const quickAccessRoles: { role: GoLiveRole; label: string; icon: string; color: string }[] = [
-    { role: 'student', label: 'Student', icon: '🎓', color: 'from-cyan-500 to-blue-600' },
-    { role: 'teacher', label: 'Teacher', icon: '👩‍🏫', color: 'from-purple-500 to-pink-600' },
-    { role: 'school_admin', label: 'School Admin', icon: '🏫', color: 'from-orange-500 to-red-600' },
-    { role: 'super_admin', label: 'Super Admin', icon: '⚡', color: 'from-yellow-500 to-orange-600' },
+  const quickAccessRoles: { role: GoLiveRole; label: string; icon: ReactNode; color: string }[] = [
+    { role: 'student', label: 'Student', icon: <GraduationCap className="w-5 h-5" />, color: 'from-cyan-500 to-blue-600' },
+    { role: 'teacher', label: 'Teacher', icon: <UserCheck className="w-5 h-5" />, color: 'from-purple-500 to-pink-600' },
+    { role: 'school_admin', label: 'School Admin', icon: <Building2 className="w-5 h-5" />, color: 'from-orange-500 to-red-600' },
+    { role: 'super_admin', label: 'Super Admin', icon: <Zap className="w-5 h-5" />, color: 'from-yellow-500 to-orange-600' },
   ];
 
   return (

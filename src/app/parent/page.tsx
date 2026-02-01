@@ -3,6 +3,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { 
   usersStore, 
@@ -16,6 +17,7 @@ import { getLevelForXP, getXPProgress } from '@/lib/domain/types';
 import { useEffect, useState } from 'react';
 import type { User, Mission, Badge } from '@/lib/domain/types';
 import { AIAssistant } from '@/components/ai';
+import { CheckCircle, Award, Shield, Users, Link2 } from 'lucide-react';
 
 interface ChildProgress {
   child: User;
@@ -34,6 +36,7 @@ interface ActivityItem {
 }
 
 export default function ParentDashboard() {
+  const router = useRouter();
   const { user } = useAuth();
   const [children, setChildren] = useState<ChildProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -112,7 +115,22 @@ export default function ParentDashboard() {
           </div>
           
           <div className="flex items-center gap-4">
+            <Link 
+              href="/os"
+              className="px-3 py-1.5 text-sm text-gray-400 hover:text-white transition-colors border border-white/10 rounded-lg hover:bg-white/5"
+            >
+              OS Hub
+            </Link>
             <span className="text-gray-400 text-sm md:text-base">{user.displayName}</span>
+            <button
+              onClick={() => {
+                localStorage.removeItem('projectx_session');
+                router.push('/');
+              }}
+              className="text-sm text-gray-400 hover:text-red-400 transition-colors"
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </header>
@@ -124,7 +142,10 @@ export default function ParentDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold mb-2">Parent Dashboard 👨‍👩‍👧</h1>
+          <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+            Parent Dashboard
+            <Users className="w-8 h-8 text-purple-400" />
+          </h1>
           <p className="text-gray-400">
             Track your child&apos;s learning progress and achievements
           </p>
@@ -134,7 +155,7 @@ export default function ParentDashboard() {
           <div className="text-gray-400">Loading...</div>
         ) : children.length === 0 ? (
           <div className="bg-white/5 border border-white/10 rounded-lg p-8 text-center">
-            <div className="text-4xl mb-4">🔗</div>
+            <Link2 className="w-10 h-10 mx-auto mb-4 text-gray-400" />
             <h2 className="text-xl font-semibold mb-2">No Children Linked</h2>
             <p className="text-gray-400 mb-4">
               Enter your child&apos;s link code to connect your accounts
@@ -206,7 +227,7 @@ export default function ParentDashboard() {
                           <div className="flex items-start justify-between">
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="text-green-400">✅</span>
+                                <CheckCircle className="w-5 h-5 text-green-400" />
                                 <span className="font-semibold">{activity.title}</span>
                               </div>
                               <p className="text-sm text-gray-400 mt-1">{activity.description}</p>
@@ -223,7 +244,9 @@ export default function ParentDashboard() {
                 
                 {/* Badges */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">🏆 Badges Earned</h3>
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <Award className="w-5 h-5 text-yellow-400" /> Badges Earned
+                  </h3>
                   
                   {badges.length === 0 ? (
                     <div className="bg-white/5 border border-white/10 rounded-lg p-6 text-center text-gray-400">
@@ -237,7 +260,7 @@ export default function ParentDashboard() {
                           className="bg-white/5 border rounded-lg p-3 text-center"
                           style={{ borderColor: badge.color }}
                         >
-                          <div className="text-2xl mb-1">🏆</div>
+                          <Award className="w-6 h-6 mx-auto mb-1 text-yellow-400" />
                           <div className="text-sm font-semibold">{badge.name}</div>
                           <div className="text-xs text-gray-400">{badge.rarity}</div>
                         </div>
@@ -258,7 +281,9 @@ export default function ParentDashboard() {
           className="mt-12 text-center"
         >
           <div className="inline-block bg-white/5 border border-white/10 rounded-lg px-6 py-4">
-            <div className="text-lg font-semibold mb-1">🔒 Your child&apos;s data is secure</div>
+            <div className="text-lg font-semibold mb-1 flex items-center justify-center gap-2">
+              <Shield className="w-5 h-5 text-green-400" /> Your child&apos;s data is secure
+            </div>
             <p className="text-sm text-gray-400">
               ProjectX is FERPA and COPPA compliant. Only you can see your linked child&apos;s progress.
             </p>

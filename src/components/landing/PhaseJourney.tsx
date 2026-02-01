@@ -3,8 +3,17 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { Phase, PHASE_DISPLAY } from '@/lib/domain/types';
+import { Sparkles, FlaskConical, Trophy, Rocket } from 'lucide-react';
 
 const phases: Phase[] = ['experience', 'experiment', 'excel', 'expand'];
+
+// Map icon names to components
+const iconMap: Record<string, React.ElementType> = {
+  Sparkles,
+  FlaskConical,
+  Trophy,
+  Rocket,
+};
 
 export function PhaseJourney() {
   const containerRef = useRef<HTMLElement>(null);
@@ -140,7 +149,14 @@ function PhaseCard({
         <div className="relative z-10">
           {/* Icon & Title */}
           <div className="text-center mb-4">
-            <span className="text-4xl mb-2 block">{info.icon}</span>
+            {(() => {
+              const IconComponent = iconMap[info.icon];
+              return IconComponent ? (
+                <IconComponent className="w-10 h-10 mx-auto mb-2" style={{ color: info.color }} />
+              ) : (
+                <span className="text-4xl mb-2 block">{info.icon}</span>
+              );
+            })()}
             <h3 
               className="text-lg font-bold"
               style={{ color: info.color }}

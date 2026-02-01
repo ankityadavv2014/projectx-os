@@ -535,56 +535,56 @@ export function getStatusInfo(status: SubmissionStatus): {
         label: 'Draft',
         color: 'text-gray-400',
         bgColor: 'bg-gray-800',
-        icon: '📝',
+        icon: 'file-edit',
       };
     case 'SUBMITTED':
       return {
         label: 'Submitted',
         color: 'text-blue-400',
         bgColor: 'bg-blue-900/50',
-        icon: '📤',
+        icon: 'upload',
       };
     case 'UNDER_REVIEW':
       return {
         label: 'Under Review',
         color: 'text-yellow-400',
         bgColor: 'bg-yellow-900/50',
-        icon: '🔍',
+        icon: 'search',
       };
     case 'FEEDBACK_REQUESTED':
       return {
         label: 'Feedback Requested',
         color: 'text-orange-400',
         bgColor: 'bg-orange-900/50',
-        icon: '💬',
+        icon: 'message-circle',
       };
     case 'RESUBMITTED':
       return {
         label: 'Resubmitted',
         color: 'text-purple-400',
         bgColor: 'bg-purple-900/50',
-        icon: '🔄',
+        icon: 'refresh-cw',
       };
     case 'APPROVED':
       return {
         label: 'Approved',
         color: 'text-green-400',
         bgColor: 'bg-green-900/50',
-        icon: '✅',
+        icon: 'check-circle',
       };
     case 'REJECTED':
       return {
         label: 'Rejected',
         color: 'text-red-400',
         bgColor: 'bg-red-900/50',
-        icon: '❌',
+        icon: 'x-circle',
       };
     default:
       return {
         label: 'Unknown',
         color: 'text-gray-400',
         bgColor: 'bg-gray-800',
-        icon: '❓',
+        icon: 'help-circle',
       };
   }
 }

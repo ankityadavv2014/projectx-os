@@ -23,7 +23,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Enter OS',
     showClose: false,
     showInPalette: true,
-    icon: '🏠',
+    icon: 'home',
   },
   '/os': {
     path: '/os',
@@ -33,7 +33,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Student Dashboard',
     showClose: false,
     showInPalette: true,
-    icon: '🖥️',
+    icon: 'monitor',
   },
   '/student': {
     path: '/student',
@@ -43,7 +43,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Start Mission',
     showClose: true,
     showInPalette: true,
-    icon: '🎓',
+    icon: 'graduation-cap',
   },
   '/teacher': {
     path: '/teacher',
@@ -53,7 +53,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Review Submissions',
     showClose: true,
     showInPalette: true,
-    icon: '👨‍🏫',
+    icon: 'user-check',
   },
   '/parent': {
     path: '/parent',
@@ -63,7 +63,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'View Student',
     showClose: true,
     showInPalette: true,
-    icon: '👨‍👩‍👧',
+    icon: 'users',
   },
   '/admin': {
     path: '/admin',
@@ -73,7 +73,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Teacher View',
     showClose: true,
     showInPalette: true,
-    icon: '⚙️',
+    icon: 'settings',
   },
   '/review': {
     path: '/review',
@@ -83,7 +83,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Back to Dashboard',
     showClose: true,
     showInPalette: true,
-    icon: '📝',
+    icon: 'file-edit',
   },
   '/desktop': {
     path: '/desktop',
@@ -93,7 +93,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'OS Hub',
     showClose: true,
     showInPalette: true,
-    icon: '🖥️',
+    icon: 'monitor',
   },
   // Company Pages
   '/about': {
@@ -104,7 +104,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Read Manifesto',
     showClose: true,
     showInPalette: true,
-    icon: '🏢',
+    icon: 'building-2',
   },
   '/manifesto': {
     path: '/manifesto',
@@ -114,7 +114,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'See Vision',
     showClose: true,
     showInPalette: true,
-    icon: '📜',
+    icon: 'scroll-text',
   },
   '/vision': {
     path: '/vision',
@@ -124,7 +124,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Enter OS',
     showClose: true,
     showInPalette: true,
-    icon: '🔭',
+    icon: 'telescope',
   },
   '/partners': {
     path: '/partners',
@@ -134,7 +134,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Get in Touch',
     showClose: true,
     showInPalette: true,
-    icon: '🤝',
+    icon: 'handshake',
   },
   '/careers': {
     path: '/careers',
@@ -144,7 +144,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Apply Now',
     showClose: true,
     showInPalette: true,
-    icon: '💼',
+    icon: 'briefcase',
   },
   '/contact': {
     path: '/contact',
@@ -154,7 +154,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Enter OS',
     showClose: true,
     showInPalette: true,
-    icon: '📧',
+    icon: 'mail',
   },
   '/legal': {
     path: '/legal',
@@ -164,7 +164,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Home',
     showClose: true,
     showInPalette: false,
-    icon: '📋',
+    icon: 'clipboard-list',
   },
   '/school': {
     path: '/school',
@@ -174,7 +174,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Schedule Demo',
     showClose: true,
     showInPalette: true,
-    icon: '🏫',
+    icon: 'building-2',
   },
   // Portal Pages (Locked)
   '/experiment': {
@@ -185,7 +185,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'Continue in eXperience',
     showClose: true,
     showInPalette: true,
-    icon: '🧪',
+    icon: 'flask-conical',
   },
   '/excel': {
     path: '/excel',
@@ -195,7 +195,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'See eXperiment',
     showClose: true,
     showInPalette: true,
-    icon: '💰',
+    icon: 'dollar-sign',
   },
   '/expand': {
     path: '/expand',
@@ -205,7 +205,7 @@ export const ROUTE_MAP: Record<string, RouteConfig> = {
     nextLabel: 'See eXcel',
     showClose: true,
     showInPalette: true,
-    icon: '🚀',
+    icon: 'rocket',
   },
 };
 
@@ -227,7 +227,7 @@ export function getRouteConfig(pathname: string): RouteConfig {
       nextLabel: 'Back to Dashboard',
       showClose: true,
       showInPalette: false,
-      icon: '🎯',
+      icon: 'target',
     };
   }
 
@@ -240,7 +240,7 @@ export function getRouteConfig(pathname: string): RouteConfig {
     nextLabel: 'Return to OS',
     showClose: true,
     showInPalette: false,
-    icon: '📄',
+    icon: 'file-text',
   };
 }
 
@@ -264,13 +264,13 @@ export function getBreadcrumbs(pathname: string): RouteConfig[] {
 
 // Quick actions for command palette
 export const QUICK_ACTIONS = [
-  { id: 'enter-os', label: 'Enter OS', path: '/os', icon: '🖥️', shortcut: 'E' },
-  { id: 'back', label: 'Go Back', action: 'back', icon: '←', shortcut: '⌥←' },
-  { id: 'home', label: 'Home', path: '/', icon: '🏠', shortcut: 'H' },
-  { id: 'student', label: 'Student Dashboard', path: '/student', icon: '🎓' },
-  { id: 'teacher', label: 'Teacher Dashboard', path: '/teacher', icon: '👨‍🏫' },
-  { id: 'parent', label: 'Parent Dashboard', path: '/parent', icon: '👨‍👩‍👧' },
-  { id: 'admin', label: 'Admin Panel', path: '/admin', icon: '⚙️' },
+  { id: 'enter-os', label: 'Enter OS', path: '/os', icon: 'monitor', shortcut: 'E' },
+  { id: 'back', label: 'Go Back', action: 'back', icon: 'arrow-left', shortcut: '⌥←' },
+  { id: 'home', label: 'Home', path: '/', icon: 'home', shortcut: 'H' },
+  { id: 'student', label: 'Student Dashboard', path: '/student', icon: 'graduation-cap' },
+  { id: 'teacher', label: 'Teacher Dashboard', path: '/teacher', icon: 'user-check' },
+  { id: 'parent', label: 'Parent Dashboard', path: '/parent', icon: 'users' },
+  { id: 'admin', label: 'Admin Panel', path: '/admin', icon: 'settings' },
 ];
 
 // Recent routes storage key

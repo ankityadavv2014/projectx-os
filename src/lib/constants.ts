@@ -45,28 +45,28 @@ export const MISSIONS = [
     title: "Explorer",
     description: "Visit all sections of the landing page",
     xpReward: 100,
-    icon: "🧭",
+    icon: "compass",
   },
   {
     id: "trailer-watcher",
     title: "Trailer Watcher",
     description: "Watch the complete trailer",
     xpReward: 75,
-    icon: "🎬",
+    icon: "play-circle",
   },
   {
     id: "os-pioneer",
     title: "OS Pioneer",
     description: "Enter OS Mode for the first time",
     xpReward: 150,
-    icon: "🖥️",
+    icon: "monitor",
   },
   {
     id: "secret-finder",
     title: "Secret Finder",
     description: "Discover a hidden easter egg",
     xpReward: 200,
-    icon: "🔮",
+    icon: "sparkles",
   },
 ] as const;
 
@@ -87,13 +87,13 @@ export const ANIMATION = {
 
 // Dock Apps (for OS Mode)
 export const DOCK_APPS = [
-  { id: "about", name: "About", icon: "📄" },
-  { id: "projects", name: "Projects", icon: "🚀" },
-  { id: "missions", name: "Missions", icon: "⚔️" },
-  { id: "services", name: "Services", icon: "⚙️" },
-  { id: "contact", name: "Contact", icon: "📧" },
-  { id: "terminal", name: "Terminal", icon: "💻" },
-  { id: "settings", name: "Settings", icon: "🔧" },
+  { id: "about", name: "About", icon: "file-text" },
+  { id: "projects", name: "Projects", icon: "rocket" },
+  { id: "missions", name: "Missions", icon: "target" },
+  { id: "services", name: "Services", icon: "settings" },
+  { id: "contact", name: "Contact", icon: "mail" },
+  { id: "terminal", name: "Terminal", icon: "terminal" },
+  { id: "settings", name: "Settings", icon: "wrench" },
 ] as const;
 
 // Keyboard shortcuts

@@ -2,12 +2,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '@/lib/auth';
+import { useAuth, logout as authLogout } from '@/lib/auth';
 import { missionsStore, assignmentsStore, submissionsStore } from '@/lib/domain/store';
 import { getLevelForXP, getXPProgress } from '@/lib/domain/types';
 import type { Mission, Assignment } from '@/lib/domain/types';
 import Link from 'next/link';
+import { LogOut, Power } from 'lucide-react';
 
 // =============================================================================
 // TYPES
@@ -35,6 +37,7 @@ interface Window {
 // =============================================================================
 
 export default function OSDesktop() {
+  const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [windows, setWindows] = useState<Window[]>([]);
@@ -42,6 +45,13 @@ export default function OSDesktop() {
   const [bootComplete, setBoot] = useState(false);
   const [todaysMissions, setTodaysMissions] = useState<{ mission: Mission; assignment: Assignment }[]>([]);
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
+  
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [authLoading, user, router]);
   
   // Clock
   useEffect(() => {
@@ -137,6 +147,11 @@ export default function OSDesktop() {
     setWindows(prev => prev.filter(w => w.id !== id));
   };
   
+  const handleLogout = () => {
+    authLogout();
+    router.push('/');
+  };
+  
   const bringToFront = (id: string) => {
     setHighestZ(z => z + 1);
     setWindows(prev => prev.map(w => 
@@ -222,6 +237,18 @@ export default function OSDesktop() {
           <div className="text-xs text-gray-400">
             {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </div>
+          
+          {/* Logout Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-white/5"
+            title="Logout"
+          >
+            <Power className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Exit</span>
+          </motion.button>
         </div>
       </header>
       

@@ -104,12 +104,19 @@ export default function StudentDashboard() {
               <span className="text-gray-400 text-sm hidden sm:inline">Level {user.level}</span>
             </div>
             
+            <Link 
+              href="/os"
+              className="px-3 py-1.5 text-sm text-gray-400 hover:text-white transition-colors border border-white/10 rounded-lg hover:bg-white/5"
+            >
+              OS Hub
+            </Link>
+            
             <button
               onClick={() => {
                 localStorage.removeItem('projectx_session');
-                router.push('/login');
+                router.push('/');
               }}
-              className="px-3 py-2 text-sm text-gray-400 hover:text-white transition-colors"
+              className="px-3 py-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
             >
               Sign Out
             </button>

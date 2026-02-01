@@ -360,28 +360,28 @@ export const PHASE_DISPLAY: Record<Phase, {
     verb: 'LEARN', 
     tagline: 'Give humans a chance to experience the future today.',
     color: 'var(--molten-orange)',
-    icon: '🟠'
+    icon: 'Sparkles'
   },
   experiment: { 
     name: 'Project eXperiment', 
     verb: 'WORK', 
     tagline: 'Let humans experiment, collaborate, and simulate real work.',
     color: 'var(--neon-blue)',
-    icon: '🔵'
+    icon: 'FlaskConical'
   },
   excel: { 
     name: 'Project eXcel', 
     verb: 'EARN', 
     tagline: 'Turn capability into value.',
     color: 'var(--sacred-gold)',
-    icon: '🟣'
+    icon: 'Trophy'
   },
   expand: { 
     name: 'Project eXpand', 
     verb: 'INVENT', 
     tagline: 'Multiply impact across regions, cultures, and systems.',
     color: '#ff4444',
-    icon: '🔴'
+    icon: 'Rocket'
   },
 };
 

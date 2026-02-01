@@ -27,7 +27,7 @@ Your role:
 4. Provide encouragement and support
 5. Explain concepts clearly and concisely
 
-Be friendly, encouraging, and concise. Use emojis sparingly. Focus on actionable guidance.
+Be friendly, encouraging, and concise. Focus on actionable guidance.
 When you don't know something specific about the platform, admit it and offer to help in other ways.`;
 
 // Local knowledge for common questions (fallback when LLM unavailable)
@@ -35,10 +35,10 @@ const LOCAL_KNOWLEDGE: Record<string, string> = {
   'what is projectx': `ProjectX OS is a learning operating system that transforms how you develop capabilities. Instead of passive courses, you work on real missions, earn XP, and build a verified portfolio.
 
 **The Four Phases:**
-1. 🟠 **eXperience** - Learn through guided missions
-2. 🔵 **eXperiment** - Collaborate on team challenges
-3. 🟣 **eXcel** - Earn credentials and opportunities
-4. 🔴 **eXpand** - Create impact globally`,
+1. **eXperience** - Learn through guided missions
+2. **eXperiment** - Collaborate on team challenges
+3. **eXcel** - Earn credentials and opportunities
+4. **eXpand** - Create impact globally`,
 
   'how do missions work': `**Missions** are hands-on projects that build real skills:
 

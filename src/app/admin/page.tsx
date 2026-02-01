@@ -3,6 +3,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { 
   orgsStore,
@@ -25,6 +26,7 @@ interface OrgStats {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const { user } = useAuth();
   const [org, setOrg] = useState<Organization | null>(null);
   const [cohorts, setCohorts] = useState<Cohort[]>([]);
@@ -91,8 +93,17 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-4">
             <span className="text-gray-400">{org?.name || 'Organization'}</span>
             <Link href="/os" className="px-4 py-2 bg-[var(--molten-orange)] rounded-lg text-sm font-semibold hover:bg-[var(--molten-orange)]/80 transition-colors">
-              Enter OS →
+              OS Hub
             </Link>
+            <button
+              onClick={() => {
+                localStorage.removeItem('projectx_session');
+                router.push('/');
+              }}
+              className="text-sm text-gray-400 hover:text-red-400 transition-colors"
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </header>

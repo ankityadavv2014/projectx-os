@@ -5,9 +5,11 @@ import { Manifesto } from "@/components/landing/Manifesto";
 import { PhaseJourney } from "@/components/landing/PhaseJourney";
 import { PersonaPathways } from "@/components/landing/PersonaPathways";
 import { Trailer } from "@/components/landing/Trailer";
+import { EnterOS } from "@/components/landing/EnterOS";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { AIAssistant } from "@/components/ai";
 import Link from "next/link";
+import { Target, Zap, Award } from "lucide-react";
 
 // =============================================================================
 // LANDING PAGE - Clean, Professional, Focused
@@ -56,12 +58,14 @@ export default function LandingPage() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: "🎯", title: "Mission-Based", desc: "Learn by doing real projects" },
-              { icon: "⚡", title: "XP Progression", desc: "Track growth with visible progress" },
-              { icon: "🏆", title: "Verified Skills", desc: "Earn credentials that matter" },
+              { icon: Target, title: "Mission-Based", desc: "Learn by doing real projects" },
+              { icon: Zap, title: "XP Progression", desc: "Track growth with visible progress" },
+              { icon: Award, title: "Verified Skills", desc: "Earn credentials that matter" },
             ].map((item) => (
               <div key={item.title} className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-3xl mb-4">{item.icon}</div>
+                <div className="mb-4">
+                  <item.icon className="w-8 h-8 text-[var(--molten-orange)]" />
+                </div>
                 <h3 className="text-white font-semibold mb-2">{item.title}</h3>
                 <p className="text-white/50 text-sm">{item.desc}</p>
               </div>
@@ -73,6 +77,7 @@ export default function LandingPage() {
       <section id="manifesto"><Manifesto /></section>
       <section id="phases"><PhaseJourney /></section>
       <section id="trailer"><Trailer /></section>
+      <section id="enter-os"><EnterOS /></section>
       <section id="personas"><PersonaPathways /></section>
       <section id="cta"><FinalCTA /></section>
 

@@ -16,7 +16,21 @@ import {
   getStatusInfo,
 } from '@/lib/domain';
 import type { Submission, GoLiveUser } from '@/types/go-live';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, type ReactNode } from 'react';
+import { 
+  ClipboardList, 
+  CheckCircle, 
+  BarChart3, 
+  Users, 
+  FileEdit, 
+  Target, 
+  TrendingUp, 
+  Upload, 
+  Zap,
+  Sparkles,
+  GraduationCap,
+  RefreshCw
+} from 'lucide-react';
 
 export default function TeacherDashboard() {
   const router = useRouter();
@@ -30,6 +44,28 @@ export default function TeacherDashboard() {
     averageReviewTime: 0 
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Refresh data function
+  const refreshData = useCallback(async (currentUser: GoLiveUser) => {
+    const [assignedStudents, reviewQueue, teacherStats] = await Promise.all([
+      getStudentsForTeacher(currentUser.id),
+      getPendingReviewQueue(currentUser.id),
+      getTeacherStats(currentUser.id),
+    ]);
+    
+    setStudents(assignedStudents);
+    setPendingReviews(reviewQueue);
+    setStats(teacherStats);
+  }, []);
+  
+  // Manual refresh handler
+  const handleRefresh = async () => {
+    if (!user || isRefreshing) return;
+    setIsRefreshing(true);
+    await refreshData(user);
+    setIsRefreshing(false);
+  };
   
   useEffect(() => {
     const init = async () => {
@@ -46,22 +82,34 @@ export default function TeacherDashboard() {
       }
       
       setUser(currentUser);
-      
-      // Load teacher data using Go-Live services
-      const [assignedStudents, reviewQueue, teacherStats] = await Promise.all([
-        getStudentsForTeacher(currentUser.id),
-        getPendingReviewQueue(currentUser.id),
-        getTeacherStats(currentUser.id),
-      ]);
-      
-      setStudents(assignedStudents);
-      setPendingReviews(reviewQueue);
-      setStats(teacherStats);
+      await refreshData(currentUser);
       setIsLoading(false);
     };
     
     init();
-  }, [router]);
+    
+    // Refresh data when page becomes visible (e.g., switching tabs or navigating back)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && user) {
+        refreshData(user);
+      }
+    };
+    
+    // Also refresh on focus
+    const handleFocus = () => {
+      if (user) {
+        refreshData(user);
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [router, user, refreshData]);
   
   if (!user) {
     return (
@@ -93,13 +141,27 @@ export default function TeacherDashboard() {
           </div>
           
           <div className="flex items-center gap-4">
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="p-2 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+              title="Refresh data"
+            >
+              <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            </button>
+            <Link 
+              href="/os"
+              className="px-3 py-1.5 text-sm text-gray-400 hover:text-white transition-colors border border-white/10 rounded-lg hover:bg-white/5"
+            >
+              OS Hub
+            </Link>
             <span className="text-gray-400">{user.displayName}</span>
             <button
               onClick={() => {
                 localStorage.removeItem('projectx_session');
-                router.push('/login');
+                router.push('/');
               }}
-              className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors"
+              className="px-4 py-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
             >
               Sign Out
             </button>
@@ -114,7 +176,10 @@ export default function TeacherDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold mb-2">Teacher Dashboard 👩‍🏫</h1>
+          <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+            Teacher Dashboard
+            <GraduationCap className="w-8 h-8 text-purple-400" />
+          </h1>
           <p className="text-gray-400">
             {stats.pendingReviews} submission{stats.pendingReviews !== 1 ? 's' : ''} awaiting review
           </p>
@@ -122,17 +187,17 @@ export default function TeacherDashboard() {
         
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <StatCard label="Pending Reviews" value={stats.pendingReviews} icon="📋" highlight />
-          <StatCard label="Reviewed Today" value={stats.reviewedToday} icon="✅" />
-          <StatCard label="Total Reviewed" value={stats.totalReviewed} icon="📊" />
-          <StatCard label="Assigned Students" value={students.length} icon="👥" />
+          <StatCard label="Pending Reviews" value={stats.pendingReviews} icon={<ClipboardList className="w-7 h-7" />} highlight />
+          <StatCard label="Reviewed Today" value={stats.reviewedToday} icon={<CheckCircle className="w-7 h-7" />} />
+          <StatCard label="Total Reviewed" value={stats.totalReviewed} icon={<BarChart3 className="w-7 h-7" />} />
+          <StatCard label="Assigned Students" value={students.length} icon={<Users className="w-7 h-7" />} />
         </div>
         
         {/* Review Queue */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold flex items-center gap-2">
-              📝 Review Queue
+              <FileEdit className="w-5 h-5 text-cyan-400" /> Review Queue
             </h2>
             {pendingReviews.length > 0 && (
               <Link 
@@ -148,7 +213,7 @@ export default function TeacherDashboard() {
             <div className="text-gray-400">Loading...</div>
           ) : pendingReviews.length === 0 ? (
             <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-6 text-center">
-              <div className="text-3xl mb-2">✨</div>
+              <Sparkles className="w-8 h-8 mx-auto mb-2 text-green-400" />
               <div className="text-green-400 font-semibold">All caught up!</div>
               <div className="text-gray-400 text-sm">No pending reviews</div>
             </div>
@@ -197,7 +262,7 @@ export default function TeacherDashboard() {
         {/* My Students */}
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            👥 My Students
+            <Users className="w-5 h-5 text-purple-400" /> My Students
           </h2>
           
           {students.length === 0 ? (
@@ -215,14 +280,16 @@ export default function TeacherDashboard() {
         
         {/* Quick Actions */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">⚡ Quick Actions</h2>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Zap className="w-5 h-5 text-yellow-400" /> Quick Actions
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link href="/review">
-              <QuickAction icon="📝" label="Review Submissions" />
+              <QuickAction icon={<FileEdit className="w-6 h-6" />} label="Review Submissions" />
             </Link>
-            <QuickAction icon="🎯" label="Assign Mission" />
-            <QuickAction icon="📊" label="View Progress" />
-            <QuickAction icon="📤" label="Export Report" />
+            <QuickAction icon={<Target className="w-6 h-6" />} label="Assign Mission" />
+            <QuickAction icon={<TrendingUp className="w-6 h-6" />} label="View Progress" />
+            <QuickAction icon={<Upload className="w-6 h-6" />} label="Export Report" />
           </div>
         </section>
       </main>
@@ -237,7 +304,7 @@ export default function TeacherDashboard() {
 function StatCard({ label, value, icon, highlight }: { 
   label: string; 
   value: number; 
-  icon: string;
+  icon: ReactNode;
   highlight?: boolean;
 }) {
   return (
@@ -255,7 +322,7 @@ function StatCard({ label, value, icon, highlight }: {
           <div className={`text-2xl font-bold ${highlight ? 'text-yellow-400' : ''}`}>{value}</div>
           <div className="text-sm text-gray-400">{label}</div>
         </div>
-        <div className="text-3xl">{icon}</div>
+        <div className="text-gray-400">{icon}</div>
       </div>
     </motion.div>
   );
@@ -280,21 +347,25 @@ function StudentCard({ student }: { student: GoLiveUser }) {
       </div>
       
       <div className="mt-3 flex items-center gap-4 text-sm">
-        <span className="text-cyan-400">⚡ {student.xp} XP</span>
-        <span className="text-purple-400">🎯 Level {student.level}</span>
+        <span className="text-cyan-400 flex items-center gap-1">
+          <Zap className="w-4 h-4" /> {student.xp} XP
+        </span>
+        <span className="text-purple-400 flex items-center gap-1">
+          <Target className="w-4 h-4" /> Level {student.level}
+        </span>
       </div>
     </motion.div>
   );
 }
 
-function QuickAction({ icon, label }: { icon: string; label: string }) {
+function QuickAction({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center hover:bg-gray-800/50 hover:border-gray-700 transition-all cursor-pointer"
     >
-      <div className="text-2xl mb-2">{icon}</div>
+      <div className="flex justify-center mb-2 text-gray-400">{icon}</div>
       <div className="text-sm">{label}</div>
     </motion.div>
   );

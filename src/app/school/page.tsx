@@ -2,35 +2,45 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { 
+  BookOpen, 
+  GraduationCap, 
+  BarChart3, 
+  Target, 
+  TrendingUp, 
+  Handshake,
+  Building2,
+  type LucideIcon
+} from 'lucide-react';
 
-const features = [
+const features: { icon: LucideIcon; title: string; description: string }[] = [
   {
-    icon: '📚',
+    icon: BookOpen,
     title: 'Curriculum Integration',
     description: 'Align ProjectX missions with your existing curriculum and learning objectives.',
   },
   {
-    icon: '👨‍🏫',
+    icon: GraduationCap,
     title: 'Teacher Training',
     description: 'Comprehensive onboarding and ongoing support for your educators.',
   },
   {
-    icon: '📊',
+    icon: BarChart3,
     title: 'Analytics Dashboard',
     description: 'Track student progress, engagement, and learning outcomes in real-time.',
   },
   {
-    icon: '🎯',
+    icon: Target,
     title: 'Custom Missions',
     description: 'Create school-specific missions aligned to your goals and values.',
   },
   {
-    icon: '📈',
+    icon: TrendingUp,
     title: 'Impact Reports',
     description: 'Detailed reports on student growth, skill development, and portfolio quality.',
   },
   {
-    icon: '🤝',
+    icon: Handshake,
     title: 'Dedicated Support',
     description: 'A partner success manager to guide your implementation journey.',
   },
@@ -55,9 +65,9 @@ export default function SchoolPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="text-6xl mb-6"
+            className="mb-6 flex justify-center"
           >
-            🏫
+            <Building2 className="w-16 h-16 text-[var(--molten-orange)]" />
           </motion.div>
           
           <motion.h1
@@ -120,7 +130,9 @@ export default function SchoolPage() {
                 transition={{ delay: index * 0.1 }}
                 className="bg-[var(--deep-space)] border border-white/10 rounded-xl p-6"
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
+                <div className="mb-4">
+                  <feature.icon className="w-10 h-10 text-[var(--molten-orange)]" />
+                </div>
                 <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
                 <p className="text-white/60">{feature.description}</p>
               </motion.div>
