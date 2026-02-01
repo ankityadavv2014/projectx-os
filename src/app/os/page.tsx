@@ -4,12 +4,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth, logout as authLogout } from '@/lib/auth';
+import { useAuth, logout as authLogout, canBootOS } from '@/lib/auth';
 import { missionsStore, assignmentsStore, submissionsStore } from '@/lib/domain/store';
 import { getLevelForXP, getXPProgress } from '@/lib/domain/types';
 import type { Mission, Assignment } from '@/lib/domain/types';
 import Link from 'next/link';
-import { LogOut, Power } from 'lucide-react';
+import { LogOut, Power, AlertTriangle } from 'lucide-react';
 
 // =============================================================================
 // TYPES
@@ -33,6 +33,83 @@ interface Window {
 }
 
 // =============================================================================
+// PILOT BOOT FAILURE SCREEN
+// =============================================================================
+
+function BootFailure({ reason }: { reason: string }) {
+  const router = useRouter();
+  
+  const reasonMessages: Record<string, { title: string; message: string; action: string }> = {
+    no_session: {
+      title: 'Session Required',
+      message: 'You need to sign in to access ProjectX OS.',
+      action: 'Sign In',
+    },
+    session_expired: {
+      title: 'Session Expired',
+      message: 'Your session has expired. Please sign in again.',
+      action: 'Sign In Again',
+    },
+    no_persona: {
+      title: 'Persona Required',
+      message: 'Please select your path before entering ProjectX OS.',
+      action: 'Choose Path',
+    },
+    permission_mismatch: {
+      title: 'Permission Error',
+      message: 'Your permissions have changed. Please sign in again.',
+      action: 'Re-authenticate',
+    },
+  };
+
+  const info = reasonMessages[reason] || {
+    title: 'Boot Failed',
+    message: 'Unable to start ProjectX OS. Please try again.',
+    action: 'Go Back',
+  };
+
+  const handleAction = () => {
+    if (reason === 'no_persona') {
+      router.push('/');
+    } else {
+      router.push('/login');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="text-center max-w-md"
+      >
+        <motion.div
+          animate={{ rotate: [0, 10, -10, 0] }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-red-500/20 border border-red-500/30 mb-6"
+        >
+          <AlertTriangle className="w-10 h-10 text-red-400" />
+        </motion.div>
+        
+        <h1 className="text-2xl font-bold text-white mb-2">{info.title}</h1>
+        <p className="text-gray-400 mb-8">{info.message}</p>
+        
+        <button
+          onClick={handleAction}
+          className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
+        >
+          {info.action}
+        </button>
+        
+        <p className="mt-6 text-xs text-gray-600 font-mono">
+          PILOT_BOOT_FAILURE: {reason}
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+// =============================================================================
 // MAIN COMPONENT
 // =============================================================================
 
@@ -43,15 +120,19 @@ export default function OSDesktop() {
   const [windows, setWindows] = useState<Window[]>([]);
   const [highestZ, setHighestZ] = useState(100);
   const [bootComplete, setBoot] = useState(false);
+  const [bootFailReason, setBootFailReason] = useState<string | null>(null);
   const [todaysMissions, setTodaysMissions] = useState<{ mission: Mission; assignment: Assignment }[]>([]);
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
   
-  // Redirect to login if not authenticated
+  // Pilot boot validation
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login');
+    if (authLoading) return;
+    
+    const bootCheck = canBootOS();
+    if (!bootCheck.ready) {
+      setBootFailReason(bootCheck.reason || 'unknown');
     }
-  }, [authLoading, user, router]);
+  }, [authLoading]);
   
   // Clock
   useEffect(() => {
@@ -170,6 +251,11 @@ export default function OSDesktop() {
         />
       </div>
     );
+  }
+  
+  // Pilot boot failure - show error screen
+  if (bootFailReason) {
+    return <BootFailure reason={bootFailReason} />;
   }
   
   const level = user ? getLevelForXP(user.xp) : null;

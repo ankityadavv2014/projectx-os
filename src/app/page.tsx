@@ -5,7 +5,6 @@ import { Manifesto } from "@/components/landing/Manifesto";
 import { PhaseJourney } from "@/components/landing/PhaseJourney";
 import { PersonaPathways } from "@/components/landing/PersonaPathways";
 import { Trailer } from "@/components/landing/Trailer";
-import { EnterOS } from "@/components/landing/EnterOS";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { AIAssistant } from "@/components/ai";
 import Link from "next/link";
@@ -77,7 +76,6 @@ export default function LandingPage() {
       <section id="manifesto"><Manifesto /></section>
       <section id="phases"><PhaseJourney /></section>
       <section id="trailer"><Trailer /></section>
-      <section id="enter-os"><EnterOS /></section>
       <section id="personas"><PersonaPathways /></section>
       <section id="cta"><FinalCTA /></section>
 

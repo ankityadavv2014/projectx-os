@@ -140,11 +140,19 @@ export interface GoLiveUser extends TenantScoped {
 }
 
 /**
+ * Persona types for Pilot system
+ * Persona defines the user's intent and UI context
+ */
+export type Persona = 'student' | 'teacher' | 'parent' | 'school';
+
+/**
  * Session data for authenticated users
+ * Extended with Pilot system requirements
  */
 export interface AuthSession {
   userId: string;
   role: GoLiveRole;
+  persona: Persona; // Pilot: persona must be resolved before OS boot
   regionId: string;
   schoolId: string;
   permissions: string[];

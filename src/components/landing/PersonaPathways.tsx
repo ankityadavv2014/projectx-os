@@ -2,43 +2,52 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { GraduationCap, BookOpen, Heart, Building2 } from 'lucide-react';
+
+// Persona icons map for Lucide components
+const personaIcons = {
+  student: GraduationCap,
+  teacher: BookOpen,
+  parent: Heart,
+  school: Building2,
+};
 
 const personas = [
   {
-    id: 'student',
-    icon: '🎯',
+    id: 'student' as const,
     title: 'I want to learn',
     description: 'Complete missions. Earn XP. Build a portfolio that proves what you can actually do.',
-    cta: 'Start learning',
-    href: '/student',
+    cta: 'Start your journey',
+    href: '/login?persona=student',
     color: 'var(--molten-orange)',
+    preview: ['Mission-driven learning', 'XP & skill tracking', 'AI-powered guidance'],
   },
   {
-    id: 'teacher',
-    icon: '📚',
+    id: 'teacher' as const,
     title: 'I want to teach',
     description: 'Design missions. Review work. Watch your students grow in ways grades never captured.',
-    cta: 'Start teaching',
-    href: '/teacher',
+    cta: 'Empower students',
+    href: '/login?persona=teacher',
     color: 'var(--neon-blue)',
+    preview: ['Mission design tools', 'Student progress view', 'Feedback system'],
   },
   {
-    id: 'parent',
-    icon: '�️',
+    id: 'parent' as const,
     title: 'I want to support',
     description: 'See what your child is building. Understand their growth. Celebrate real wins.',
     cta: 'Track progress',
-    href: '/parent',
+    href: '/login?persona=parent',
     color: 'var(--sacred-gold)',
+    preview: ['Growth insights', 'Achievement tracking', 'Learning journey view'],
   },
   {
-    id: 'school',
-    icon: '🏫',
+    id: 'school' as const,
     title: 'I run a school',
     description: 'Deploy ProjectX across your institution. Get analytics, tools, and a new way forward.',
     cta: 'Partner with us',
-    href: '/partners',
+    href: '/contact?type=school',
     color: '#a855f7',
+    preview: ['Institution dashboard', 'Teacher management', 'Analytics & reports'],
   },
 ];
 
@@ -94,6 +103,8 @@ function PersonaCard({
   persona: typeof personas[0]; 
   index: number;
 }) {
+  const IconComponent = personaIcons[persona.id];
+  
   return (
     <motion.div
       className="group relative"
@@ -121,10 +132,11 @@ function PersonaCard({
         <div className="relative z-10">
           {/* Icon */}
           <motion.div 
-            className="text-5xl mb-4"
+            className="mb-4"
             whileHover={{ scale: 1.2, rotate: 5 }}
+            style={{ color: persona.color }}
           >
-            {persona.icon}
+            <IconComponent className="w-12 h-12" />
           </motion.div>
 
           {/* Title */}
@@ -136,9 +148,19 @@ function PersonaCard({
           </h3>
 
           {/* Description */}
-          <p className="text-white/60 text-sm mb-6 leading-relaxed">
+          <p className="text-white/60 text-sm mb-4 leading-relaxed">
             {persona.description}
           </p>
+          
+          {/* Preview list - shows what they'll get */}
+          <ul className="space-y-1 mb-6">
+            {persona.preview.map((item, i) => (
+              <li key={i} className="text-xs text-white/40 flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full" style={{ backgroundColor: persona.color }} />
+                {item}
+              </li>
+            ))}
+          </ul>
 
           {/* CTA Button */}
           <Link href={persona.href}>

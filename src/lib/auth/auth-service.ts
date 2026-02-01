@@ -96,6 +96,20 @@ const MOCK_USERS: GoLiveUser[] = [
     updatedAt: new Date('2025-01-31'),
   },
   {
+    id: 'parent-001',
+    email: 'parent@projectx.school',
+    displayName: 'Alex\'s Parent',
+    role: 'student', // Parents use student role with parent persona
+    regionId: 'region-mumbai',
+    schoolId: 'school-projectx-hq',
+    cohortIds: [],
+    xp: 0,
+    level: 0,
+    status: 'active',
+    createdAt: new Date('2025-01-15'),
+    updatedAt: new Date('2025-01-31'),
+  },
+  {
     id: 'regional-001',
     email: 'regional@projectx.org',
     displayName: 'Regional Admin',
@@ -200,15 +214,52 @@ function getRolePermissions(role: GoLiveRole): string[] {
 }
 
 /**
+ * Map role to default persona
+ * Pilot: persona defines the user's intent and UI context
+ */
+function getDefaultPersonaForRole(role: GoLiveRole): 'student' | 'teacher' | 'parent' | 'school' {
+  switch (role) {
+    case 'student':
+      return 'student';
+    case 'teacher':
+      return 'teacher';
+    case 'school_admin':
+    case 'regional_admin':
+    case 'super_admin':
+      return 'school';
+    default:
+      return 'student';
+  }
+}
+
+/**
+ * Get stored persona intent from sessionStorage
+ */
+function getPersonaIntent(): 'student' | 'teacher' | 'parent' | 'school' | null {
+  if (typeof window === 'undefined') return null;
+  const persona = sessionStorage.getItem('projectx_persona_intent');
+  if (persona === 'student' || persona === 'teacher' || persona === 'parent' || persona === 'school') {
+    return persona;
+  }
+  return null;
+}
+
+/**
  * Create a session for a user
+ * Pilot: persona must be resolved before OS boot
  */
 function createSession(user: GoLiveUser): AuthSession {
   const expiresAt = new Date();
   expiresAt.setHours(expiresAt.getHours() + SESSION_EXPIRY_HOURS);
 
+  // Get persona from intent (landing page selection) or default from role
+  const personaIntent = getPersonaIntent();
+  const persona = personaIntent || getDefaultPersonaForRole(user.role);
+
   return {
     userId: user.id,
     role: user.role,
+    persona,
     regionId: user.regionId,
     schoolId: user.schoolId,
     permissions: getRolePermissions(user.role),
@@ -257,7 +308,69 @@ function getStoredSession(): AuthSession | null {
 function clearSession(): void {
   if (typeof window !== 'undefined') {
     localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem('projectx_persona_intent');
   }
+}
+
+// ============================================
+// PILOT VALIDATION
+// ============================================
+
+/**
+ * Validate session integrity for Pilot
+ * Returns validation result with reason if failed
+ */
+export function validateSession(session: AuthSession | null): { 
+  valid: boolean; 
+  reason?: string;
+  session?: AuthSession;
+} {
+  // No session
+  if (!session) {
+    return { valid: false, reason: 'no_session' };
+  }
+
+  // Session expired
+  if (session.expiresAt < new Date()) {
+    return { valid: false, reason: 'session_expired' };
+  }
+
+  // Persona missing (Pilot constraint: persona must exist before OS boot)
+  if (!session.persona) {
+    return { valid: false, reason: 'no_persona' };
+  }
+
+  // Role-permission alignment check
+  const expectedPermissions = getRolePermissions(session.role);
+  const hasValidPermissions = expectedPermissions.every(p => 
+    session.permissions.includes(p)
+  );
+  
+  if (!hasValidPermissions) {
+    return { valid: false, reason: 'permission_mismatch' };
+  }
+
+  // All checks passed
+  return { valid: true, session };
+}
+
+/**
+ * Check if OS can boot for current session
+ * Pilot: OS is not UI. OS = state + permissions + tools + AI.
+ */
+export function canBootOS(): { 
+  ready: boolean; 
+  reason?: string;
+  session?: AuthSession;
+} {
+  const session = getStoredSession();
+  const validation = validateSession(session);
+  
+  if (!validation.valid) {
+    return { ready: false, reason: validation.reason };
+  }
+
+  return { ready: true, session: validation.session };
 }
 
 // ============================================

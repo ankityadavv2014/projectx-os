@@ -24,6 +24,8 @@ export {
   getUsersByRoleInSchool,
   getStudentsForTeacher,
   getTeacherForStudent,
+  validateSession,
+  canBootOS,
   mockUsers,
   type LoginResult,
 } from './auth-service';

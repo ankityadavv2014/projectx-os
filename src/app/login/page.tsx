@@ -1,24 +1,61 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, type ReactNode, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { login, loginAsRole, getDashboardForRole } from '@/lib/auth';
 import type { GoLiveRole } from '@/types/go-live';
-import { GraduationCap, UserCheck, Building2, Zap } from 'lucide-react';
+import { GraduationCap, UserCheck, Building2, Zap, BookOpen, Heart, ArrowLeft } from 'lucide-react';
+
+// Persona display configuration
+const personaConfig = {
+  student: { label: 'Student', icon: GraduationCap, color: 'from-cyan-500 to-blue-600', role: 'student' as GoLiveRole },
+  teacher: { label: 'Teacher', icon: BookOpen, color: 'from-purple-500 to-pink-600', role: 'teacher' as GoLiveRole },
+  parent: { label: 'Parent', icon: Heart, color: 'from-amber-500 to-orange-600', role: 'student' as GoLiveRole }, // Parents see student view
+  school: { label: 'School Admin', icon: Building2, color: 'from-orange-500 to-red-600', role: 'school_admin' as GoLiveRole },
+};
 
 /**
  * Login Page
  *
- * Demo login for Go-Live testing.
- * In production: Replace with Clerk, Auth.js, or your auth provider.
+ * Persona-aware login for Pilot system.
+ * Captures persona from URL params and stores in session.
  */
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginLoadingState />}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+// Loading state while suspense resolves
+function LoginLoadingState() {
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="w-12 h-12 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin" />
+    </div>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showQuickAccess, setShowQuickAccess] = useState(false);
+  
+  // Get persona from URL params (set by landing page)
+  const personaParam = searchParams.get('persona') as keyof typeof personaConfig | null;
+  const persona = personaParam && personaConfig[personaParam] ? personaConfig[personaParam] : null;
+  
+  // Store persona intent in sessionStorage for auth-service to pick up
+  useEffect(() => {
+    if (personaParam) {
+      sessionStorage.setItem('projectx_persona_intent', personaParam);
+    }
+  }, [personaParam]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +65,7 @@ export default function LoginPage() {
     try {
       const result = await login(email);
       if (result.success && result.session) {
-        // Redirect to role-specific dashboard
+        // Redirect to role-specific dashboard (persona is now in session)
         router.push(getDashboardForRole(result.session.role));
       } else {
         setError(result.error || 'Login failed');
@@ -47,7 +84,7 @@ export default function LoginPage() {
     try {
       const result = await loginAsRole(role);
       if (result.success && result.session) {
-        // Redirect to role-specific dashboard
+        // Redirect to role-specific dashboard (persona is now in session)
         router.push(getDashboardForRole(result.session.role));
       } else {
         setError(result.error || 'Login failed');
@@ -59,12 +96,15 @@ export default function LoginPage() {
     }
   };
 
-  const quickAccessRoles: { role: GoLiveRole; label: string; icon: ReactNode; color: string }[] = [
-    { role: 'student', label: 'Student', icon: <GraduationCap className="w-5 h-5" />, color: 'from-cyan-500 to-blue-600' },
-    { role: 'teacher', label: 'Teacher', icon: <UserCheck className="w-5 h-5" />, color: 'from-purple-500 to-pink-600' },
-    { role: 'school_admin', label: 'School Admin', icon: <Building2 className="w-5 h-5" />, color: 'from-orange-500 to-red-600' },
-    { role: 'super_admin', label: 'Super Admin', icon: <Zap className="w-5 h-5" />, color: 'from-yellow-500 to-orange-600' },
-  ];
+  // When persona is set, show the appropriate role only
+  const quickAccessRoles: { role: GoLiveRole; label: string; icon: ReactNode; color: string }[] = persona 
+    ? [{ role: persona.role, label: persona.label, icon: <persona.icon className="w-5 h-5" />, color: persona.color }]
+    : [
+        { role: 'student', label: 'Student', icon: <GraduationCap className="w-5 h-5" />, color: 'from-cyan-500 to-blue-600' },
+        { role: 'teacher', label: 'Teacher', icon: <UserCheck className="w-5 h-5" />, color: 'from-purple-500 to-pink-600' },
+        { role: 'school_admin', label: 'School Admin', icon: <Building2 className="w-5 h-5" />, color: 'from-orange-500 to-red-600' },
+        { role: 'super_admin', label: 'Super Admin', icon: <Zap className="w-5 h-5" />, color: 'from-yellow-500 to-orange-600' },
+      ];
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
@@ -85,12 +125,31 @@ export default function LoginPage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', delay: 0.2 }}
-            className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 mb-4"
+            className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${persona ? persona.color : 'from-cyan-500 to-purple-600'} mb-4`}
           >
-            <span className="text-4xl font-bold text-white">X</span>
+            {persona ? (
+              <persona.icon className="w-10 h-10 text-white" />
+            ) : (
+              <span className="text-4xl font-bold text-white">X</span>
+            )}
           </motion.div>
-          <h1 className="text-3xl font-bold text-white mb-2">ProjectX OS</h1>
-          <p className="text-gray-400">Sign in to continue your journey</p>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            {persona ? `Welcome, ${persona.label}` : 'ProjectX OS'}
+          </h1>
+          <p className="text-gray-400">
+            {persona ? 'Sign in to start your journey' : 'Sign in to continue your journey'}
+          </p>
+          {persona && (
+            <motion.a
+              href="/"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="inline-flex items-center gap-1 mt-2 text-sm text-gray-500 hover:text-cyan-400 transition-colors"
+            >
+              <ArrowLeft className="w-3 h-3" />
+              Not you? Choose different path
+            </motion.a>
+          )}
         </div>
 
         {/* Login Card */}
@@ -165,7 +224,7 @@ export default function LoginPage() {
             onClick={() => setShowQuickAccess(!showQuickAccess)}
             className="w-full py-2 text-sm text-gray-400 hover:text-white transition-colors"
           >
-            {showQuickAccess ? '▲ Hide' : '▼ Show'} Demo Quick Access
+            {showQuickAccess ? '▲ Hide' : '▼ Show'} {persona ? 'Quick Login' : 'Demo Quick Access'}
           </button>
 
           {/* Quick Access Buttons */}
@@ -178,9 +237,11 @@ export default function LoginPage() {
                 className="mt-4 space-y-2"
               >
                 <p className="text-xs text-gray-500 text-center mb-3">
-                  For demo purposes only. Click to login as:
+                  {persona 
+                    ? `Continue as ${persona.label}:` 
+                    : 'For demo purposes only. Click to login as:'}
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className={`grid ${persona ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
                   {quickAccessRoles.map((item) => (
                     <motion.button
                       key={item.role}
@@ -188,10 +249,10 @@ export default function LoginPage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleQuickLogin(item.role)}
                       disabled={loading}
-                      className={`flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r ${item.color} text-white text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+                      className={`flex items-center justify-center gap-2 p-3 rounded-xl bg-gradient-to-r ${item.color} text-white text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
                     >
                       <span className="text-lg">{item.icon}</span>
-                      <span>{item.label}</span>
+                      <span>{persona ? `Enter as ${item.label}` : item.label}</span>
                     </motion.button>
                   ))}
                 </div>
