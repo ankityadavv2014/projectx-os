@@ -6,21 +6,20 @@ import { GlowText } from "@/components/ui/GlowText";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 
 const manifestoLines = [
-  { text: "In the Age of Machines,", highlight: false, delay: 0 },
-  { text: "We Build Humans.", highlight: true, delay: 0.1 },
+  { text: "The world is changing faster than schools can adapt.", highlight: false, delay: 0 },
   { text: "", highlight: false, delay: 0 },
-  { text: "Not apps. Not algorithms.", highlight: false, delay: 0.2 },
-  { text: "Humans.", highlight: true, delay: 0.3 },
+  { text: "AI writes code. Machines diagnose diseases.", highlight: false, delay: 0.1 },
+  { text: "Robots build cars. Algorithms trade stocks.", highlight: false, delay: 0.2 },
   { text: "", highlight: false, delay: 0 },
-  { text: "We believe technology should elevate,", highlight: false, delay: 0.4 },
-  { text: "not replace, the human spirit.", highlight: false, delay: 0.5 },
+  { text: "So what's left for humans?", highlight: true, delay: 0.3 },
   { text: "", highlight: false, delay: 0 },
-  { text: "We are architects of potential.", highlight: true, delay: 0.6 },
-  { text: "Engineers of evolution.", highlight: false, delay: 0.7 },
-  { text: "Builders of the future self.", highlight: false, delay: 0.8 },
+  { text: "Everything that matters.", highlight: false, delay: 0.4 },
   { text: "", highlight: false, delay: 0 },
-  { text: "This is", highlight: false, delay: 0.9 },
-  { text: "ProjectX.", highlight: true, delay: 1.0 },
+  { text: "Creativity. Empathy. Leadership. Judgment.", highlight: false, delay: 0.5 },
+  { text: "The ability to ask the right questions.", highlight: false, delay: 0.6 },
+  { text: "The courage to build what doesn't exist.", highlight: false, delay: 0.7 },
+  { text: "", highlight: false, delay: 0 },
+  { text: "That's what we build.", highlight: true, delay: 0.8 },
 ];
 
 // Animated line with reveal effect

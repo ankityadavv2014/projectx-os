@@ -4,78 +4,100 @@ import { Hero } from "@/components/landing/Hero";
 import { Manifesto } from "@/components/landing/Manifesto";
 import { PhaseJourney } from "@/components/landing/PhaseJourney";
 import { PersonaPathways } from "@/components/landing/PersonaPathways";
-import { SocialProof } from "@/components/landing/SocialProof";
 import { Trailer } from "@/components/landing/Trailer";
 import { FinalCTA } from "@/components/landing/FinalCTA";
-import { ParticleField } from "@/components/ui/ParticleField";
+import { AIAssistant } from "@/components/ai";
+import Link from "next/link";
+
+// =============================================================================
+// LANDING PAGE - Clean, Professional, Focused
+// =============================================================================
 
 export default function LandingPage() {
   return (
-    <main id="main-content" className="relative">
-      {/* Particle background */}
-      <ParticleField 
-        particleCount={50} 
-        colors={["#ff6b35", "#00d4ff", "#ffd700"]}
-        speed={0.3}
-        maxOpacity={0.4}
-      />
+    <main id="main-content" className="relative bg-[#0a0a0f]">
+      {/* Minimal top bar - clean status */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-white/40 text-xs font-mono uppercase tracking-wider">System Online</span>
+        </div>
+        <div className="flex items-center gap-6">
+          <Link 
+            href="/manifesto" 
+            className="text-white/40 hover:text-white text-sm transition-colors"
+          >
+            Manifesto
+          </Link>
+          <Link 
+            href="/login" 
+            className="px-4 py-1.5 rounded-full border border-white/20 text-white/60 hover:text-white hover:border-white/40 text-sm transition-all"
+          >
+            Sign In
+          </Link>
+        </div>
+      </nav>
 
-      {/* Sections - The Journey */}
+      {/* AI Assistant - conversational guide */}
+      <AIAssistant context="landing" />
+
+      {/* Clean section flow */}
       <Hero />
-      <SocialProof />
-      <Manifesto />
-      <PhaseJourney />
-      <PersonaPathways />
-      <Trailer />
-      <FinalCTA />
-
-      {/* Footer */}
-      <footer className="relative z-10 py-16 px-4 border-t border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            {/* Brand */}
-            <div className="md:col-span-2">
-              <h3 className="text-2xl font-black text-[var(--molten-orange)] mb-4">
-                Project<span className="text-white">✦</span>X
-              </h3>
-              <p className="text-white/50 max-w-sm mb-4">
-                The Human Upgrade Operating System. Building the future of 
-                learning, one human at a time.
-              </p>
-              <p className="text-white/30 text-sm font-mono">
-                In the Age of Machines, We Build Humans.
-              </p>
-            </div>
-            
-            {/* Links */}
-            <div>
-              <h4 className="text-white font-semibold mb-4">Platform</h4>
-              <ul className="space-y-2 text-white/50 text-sm">
-                <li><a href="/os" className="hover:text-white transition-colors">Enter OS</a></li>
-                <li><a href="/student" className="hover:text-white transition-colors">For Students</a></li>
-                <li><a href="/teacher" className="hover:text-white transition-colors">For Teachers</a></li>
-                <li><a href="/parent" className="hover:text-white transition-colors">For Parents</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-white font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-white/50 text-sm">
-                <li><a href="#manifesto" className="hover:text-white transition-colors">Manifesto</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-              </ul>
-            </div>
+      
+      {/* Why ProjectX - simplified */}
+      <section className="relative py-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            Why <span className="text-[var(--molten-orange)]">ProjectX</span>?
+          </h2>
+          <p className="text-lg text-white/50 mb-12 max-w-2xl mx-auto">
+            Education is broken. Degrees don&apos;t guarantee capability. 
+            ProjectX replaces passive learning with real experience.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: "🎯", title: "Mission-Based", desc: "Learn by doing real projects" },
+              { icon: "⚡", title: "XP Progression", desc: "Track growth with visible progress" },
+              { icon: "🏆", title: "Verified Skills", desc: "Earn credentials that matter" },
+            ].map((item) => (
+              <div key={item.title} className="p-6 rounded-2xl bg-white/5 border border-white/10">
+                <div className="text-3xl mb-4">{item.icon}</div>
+                <h3 className="text-white font-semibold mb-2">{item.title}</h3>
+                <p className="text-white/50 text-sm">{item.desc}</p>
+              </div>
+            ))}
           </div>
-          
-          {/* Bottom bar */}
-          <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-white/30 text-sm">
-              © {new Date().getFullYear()} The ProjectX Co. All rights reserved.
-            </p>
-            <p className="text-white/20 text-xs font-mono">
-              Built with 🔥 for the human upgrade
+        </div>
+      </section>
+
+      <section id="manifesto"><Manifesto /></section>
+      <section id="phases"><PhaseJourney /></section>
+      <section id="trailer"><Trailer /></section>
+      <section id="personas"><PersonaPathways /></section>
+      <section id="cta"><FinalCTA /></section>
+
+      {/* Minimal footer */}
+      <footer className="relative py-12 px-6 border-t border-white/10">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h3 className="text-xl font-bold text-[var(--molten-orange)] mb-1">
+                Project<span className="text-white">X</span>
+              </h3>
+              <p className="text-white/30 text-sm">
+                The Human Upgrade • Built in India
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-8 text-sm text-white/40">
+              <Link href="/about" className="hover:text-white transition-colors">About</Link>
+              <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
+              <Link href="/careers" className="hover:text-white transition-colors">Careers</Link>
+              <Link href="/legal" className="hover:text-white transition-colors">Legal</Link>
+            </div>
+            
+            <p className="text-white/20 text-xs">
+              © {new Date().getFullYear()} The ProjectX Co.
             </p>
           </div>
         </div>

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand Colors */
+  /* Brand Colors - Enhanced for TV visibility */
   --deep-space: #0a0a0f;
   --molten-orange: #ff6b35;
   --neon-blue: #00d4ff;
@@ -9,10 +9,10 @@
   --matrix-green: #00ff41;
   --cosmic-purple: #9d4edd;
   
-  /* Neutrals */
+  /* Neutrals - Higher contrast */
   --dark-gray: #1a1a2e;
   --medium-gray: #2d2d44;
-  --light-gray: #e0e0e0;
+  --light-gray: #f0f0f0;
   
   /* Spacing */
   --spacing-unit: 8px;
@@ -21,11 +21,56 @@
   --transition-fast: 150ms ease;
   --transition-normal: 300ms ease;
   --transition-slow: 500ms ease;
+
+  /* Mobile-first base font size */
+  font-size: 16px;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  :root {
+    font-size: 17px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  :root {
+    font-size: 18px;
+  }
+}
+
+/* Large screens / TV optimization */
+@media (min-width: 1920px) {
+  :root {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    font-size: 26px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+  
+  /* Reduce hover animations on touch devices */
+  .hover\:scale-105:hover {
+    transform: none;
+  }
 }
 
 /* Dark mode is default */
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -33,6 +78,8 @@ body {
   color: var(--light-gray);
   font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
 }
 
 /* Custom scrollbar */
@@ -97,11 +144,127 @@ body {
 
 /* Text glow */
 .text-glow-orange {
-  text-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+  text-shadow: 0 0 20px rgba(255, 107, 53, 0.8), 0 0 40px rgba(255, 107, 53, 0.4);
 }
 
 .text-glow-blue {
-  text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 212, 255, 0.4);
+}
+
+.text-glow-gold {
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+}
+
+/* Enhanced text visibility for TV */
+.text-readable {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Cybernetic glow effects */
+.cyber-glow {
+  position: relative;
+}
+
+.cyber-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, var(--molten-orange), var(--neon-blue), var(--sacred-gold));
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+.cyber-glow:hover::before {
+  opacity: 0.5;
+}
+
+/* Holographic text effect */
+.holo-text {
+  background: linear-gradient(
+    90deg,
+    var(--molten-orange) 0%,
+    var(--sacred-gold) 25%,
+    var(--neon-blue) 50%,
+    var(--sacred-gold) 75%,
+    var(--molten-orange) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: holo-shift 8s linear infinite;
+}
+
+@keyframes holo-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  color: var(--neon-blue);
+  animation: glitch-1 2s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+}
+
+.glitch::after {
+  color: var(--molten-orange);
+  animation: glitch-2 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+}
+
+@keyframes glitch-1 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(2px, -2px); }
+  40% { transform: translate(-2px, 2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(-2px, -2px); }
+}
+
+/* Data stream animation */
+@keyframes data-stream {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+.data-stream {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--neon-blue) 50%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: data-stream 3s linear infinite;
 }
 
 /* Glass morphism */

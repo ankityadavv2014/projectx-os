@@ -2,52 +2,43 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useRef } from 'react';
 
 const personas = [
   {
     id: 'student',
     icon: '🎯',
-    title: 'Students',
-    subtitle: 'Explorers of Tomorrow',
-    description: 'Complete missions, earn XP, build your portfolio, and level up through real-world challenges.',
-    cta: 'Start Your Journey',
+    title: 'I want to learn',
+    description: 'Complete missions. Earn XP. Build a portfolio that proves what you can actually do.',
+    cta: 'Start learning',
     href: '/student',
     color: 'var(--molten-orange)',
-    features: ['Gamified missions', 'XP & badges', 'AI mentor', 'Portfolio builder'],
   },
   {
     id: 'teacher',
     icon: '📚',
-    title: 'Teachers',
-    subtitle: 'Architects of Potential',
-    description: 'Assign missions, review submissions, track cohort progress, and guide the next generation.',
-    cta: 'Empower Learners',
+    title: 'I want to teach',
+    description: 'Design missions. Review work. Watch your students grow in ways grades never captured.',
+    cta: 'Start teaching',
     href: '/teacher',
     color: 'var(--neon-blue)',
-    features: ['Mission designer', 'Review dashboard', 'Progress analytics', 'Cohort management'],
   },
   {
     id: 'parent',
-    icon: '👨‍👩‍👧',
-    title: 'Parents',
-    subtitle: 'Champions of Growth',
-    description: 'Watch your child evolve. See their achievements, understand their journey, celebrate wins.',
-    cta: 'Track Progress',
+    icon: '�️',
+    title: 'I want to support',
+    description: 'See what your child is building. Understand their growth. Celebrate real wins.',
+    cta: 'Track progress',
     href: '/parent',
     color: 'var(--sacred-gold)',
-    features: ['Child dashboard', 'Achievement alerts', 'Progress reports', 'Learning insights'],
   },
   {
     id: 'school',
     icon: '🏫',
-    title: 'Schools',
-    subtitle: 'Hubs of Evolution',
-    description: 'Deploy ProjectX across your institution. Unified analytics, cohort management, curriculum integration.',
-    cta: 'Partner With Us',
-    href: '/admin',
+    title: 'I run a school',
+    description: 'Deploy ProjectX across your institution. Get analytics, tools, and a new way forward.',
+    cta: 'Partner with us',
+    href: '/partners',
     color: '#a855f7',
-    features: ['Org dashboard', 'Teacher onboarding', 'Curriculum tools', 'Impact reports'],
   },
 ];
 
@@ -103,11 +94,8 @@ function PersonaCard({
   persona: typeof personas[0]; 
   index: number;
 }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
   return (
     <motion.div
-      ref={cardRef}
       className="group relative"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -141,32 +129,16 @@ function PersonaCard({
 
           {/* Title */}
           <h3 
-            className="text-2xl font-bold mb-1"
+            className="text-xl font-bold mb-3"
             style={{ color: persona.color }}
           >
             {persona.title}
           </h3>
-          <p className="text-sm text-white/50 mb-4 font-mono">
-            {persona.subtitle}
-          </p>
 
           {/* Description */}
-          <p className="text-white/70 text-sm mb-6 min-h-[60px]">
+          <p className="text-white/60 text-sm mb-6 leading-relaxed">
             {persona.description}
           </p>
-
-          {/* Features */}
-          <div className="space-y-2 mb-6">
-            {persona.features.map((feature, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm text-white/60">
-                <span 
-                  className="w-1 h-1 rounded-full"
-                  style={{ backgroundColor: persona.color }}
-                />
-                {feature}
-              </div>
-            ))}
-          </div>
 
           {/* CTA Button */}
           <Link href={persona.href}>

@@ -14,7 +14,8 @@ import {
 } from '@/lib/domain/store';
 import { getLevelForXP, getXPProgress } from '@/lib/domain/types';
 import { useEffect, useState } from 'react';
-import type { User, Submission, Mission, Badge, Review } from '@/lib/domain/types';
+import type { User, Mission, Badge } from '@/lib/domain/types';
+import { AIAssistant } from '@/components/ai';
 
 interface ChildProgress {
   child: User;
@@ -95,11 +96,14 @@ export default function ParentDashboard() {
   
   return (
     <div className="min-h-screen bg-[var(--deep-space)] text-white">
+      {/* AI Assistant for Parents */}
+      <AIAssistant context="default" />
+      
       {/* Header */}
-      <header className="border-b border-white/10 bg-black/30 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-xl font-bold text-[var(--molten-orange)]">
+      <header className="border-b border-white/10 bg-black/30 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 md:gap-4">
+            <Link href="/" className="text-lg md:text-xl font-bold text-[var(--molten-orange)]">
               ProjectX
             </Link>
             <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full">
@@ -108,12 +112,12 @@ export default function ParentDashboard() {
           </div>
           
           <div className="flex items-center gap-4">
-            <span className="text-gray-400">{user.displayName}</span>
+            <span className="text-gray-400 text-sm md:text-base">{user.displayName}</span>
           </div>
         </div>
       </header>
       
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Welcome */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -45,21 +45,23 @@ export function FinalCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <span className="text-[var(--molten-orange)] font-mono text-sm tracking-widest uppercase">
-            [ YOUR EVOLUTION AWAITS ]
-          </span>
-          
-          <h2 className="text-4xl md:text-6xl font-black mt-6 mb-8 leading-tight">
-            <span className="text-white">Ready to </span>
-            <span className="bg-gradient-to-r from-[var(--molten-orange)] via-[var(--sacred-gold)] to-[var(--neon-blue)] bg-clip-text text-transparent">
-              Upgrade
-            </span>
-            <span className="text-white">?</span>
+          <h2 className="text-4xl md:text-6xl font-black mb-8 leading-tight">
+            <span className="text-white">The world doesn't need</span>
+            <br />
+            <span className="text-white/40">another course platform.</span>
           </h2>
           
-          <p className="text-xl text-white/60 max-w-2xl mx-auto mb-12">
-            Join thousands of learners, teachers, and schools already 
-            building the future. Your journey through the civilization ladder starts here.
+          <p className="text-2xl md:text-3xl text-white mb-4">
+            It needs a new{' '}
+            <span className="bg-gradient-to-r from-[var(--molten-orange)] via-[var(--sacred-gold)] to-[var(--neon-blue)] bg-clip-text text-transparent font-bold">
+              operating system
+            </span>
+            {' '}for humans.
+          </p>
+          
+          <p className="text-lg text-white/50 max-w-xl mx-auto mb-12">
+            We're building it. And we're looking for the first believers—
+            students, teachers, schools—who want to help shape it.
           </p>
         </motion.div>
 
@@ -89,42 +91,37 @@ export function FinalCTA() {
               
               <span className="relative z-10 flex items-center gap-2 text-[var(--deep-space)]">
                 <span className="text-xl">⚡</span>
-                Launch ProjectX OS
+                Enter the OS
               </span>
             </motion.button>
           </Link>
 
-          <Link href="#manifesto">
+          <Link href="/partners">
             <motion.button
               className="px-8 py-5 rounded-2xl font-semibold text-lg border border-white/20 text-white/80 hover:bg-white/5 hover:border-white/40 transition-all"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              Read the Manifesto
+              Partner with us
             </motion.button>
           </Link>
         </motion.div>
 
-        {/* Trust indicators */}
+        {/* Honest positioning */}
         <motion.div
-          className="mt-12 flex flex-wrap items-center justify-center gap-8 text-white/40 text-sm"
+          className="mt-16 p-6 rounded-2xl border border-white/10 bg-white/[0.02] max-w-2xl mx-auto"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <div className="flex items-center gap-2">
-            <span className="text-[var(--neon-blue)]">✓</span>
-            Free to start
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[var(--sacred-gold)]">✓</span>
-            No credit card
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[var(--molten-orange)]">✓</span>
-            Instant access
-          </div>
+          <p className="text-white/60 text-sm leading-relaxed">
+            <span className="text-white font-semibold">Honest disclaimer:</span> We're early. 
+            The platform is live, but we're still building. If you're looking for 
+            a finished product with all the answers, this isn't it yet. 
+            But if you want to be part of building something that could 
+            change how humans learn—<span className="text-[var(--molten-orange)]">we want you here.</span>
+          </p>
         </motion.div>
 
         {/* Keyboard hint */}
@@ -136,7 +133,7 @@ export function FinalCTA() {
           transition={{ duration: 0.6, delay: 0.7 }}
         >
           Press <kbd className="px-2 py-1 rounded bg-white/10 border border-white/10 mx-1">⌘</kbd>+
-          <kbd className="px-2 py-1 rounded bg-white/10 border border-white/10 mx-1">K</kbd> for quick access
+          <kbd className="px-2 py-1 rounded bg-white/10 border border-white/10 mx-1">K</kbd> anywhere
         </motion.p>
       </div>
     </section>
